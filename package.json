@@ -10,7 +10,10 @@
     "prettier": "prettier \"src/**/*.ts\" --write",
     "eslint": "eslint \"src/**\" --fix",
     "stylelint": "npx stylelint \"src/**/*.scss\" --fix --config=\".stylelintrc.json\"",
-    "code-format": "npm run prettier && npm run eslint && npm run stylelint"
+    "code-format": "npm run prettier && npm run eslint && npm run stylelint",
+    "i18n:extract": "transloco-keys-manager extract --config \"src\" --sort --remove-extra-keys",
+    "i18n:find": "transloco-keys-manager find --config \"src\" --add-missing-keys",
+    "i18n": "npm run i18n:extract && npm run i18n:find"
   },
   "private": true,
   "dependencies": {
@@ -34,6 +37,7 @@
     "@angular-eslint/template-parser": "^19.0.2",
     "@angular/cli": "^19.0.5",
     "@angular/compiler-cli": "^19.0.0",
+    "@jsverse/transloco-keys-manager": "^6.0.0",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.1",
     "@typescript-eslint/parser": "^8.18.1",
@@ -46,6 +50,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ngx-build-plus": "^18.0.0",
     "prettier": "^3.4.2",
     "stylelint": "^16.12.0",
     "stylelint-scss": "^6.10.0",
@@ -53,3 +58,4 @@
     "typescript-eslint": "^8.18.1"
   }
 }
+
