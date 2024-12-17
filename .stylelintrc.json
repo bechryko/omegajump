@@ -1,0 +1,12 @@
+{
+  "plugins": ["stylelint-scss"],
+  "rules": {
+    "scss/at-use-no-redundant-alias": true,
+    "scss/block-no-redundant-nesting": true,
+    "scss/property-no-unknown": true,
+    "scss/no-duplicate-dollar-variables": true,
+    "scss/no-duplicate-mixins": true,
+    "scss/no-unused-private-members": true,
+    "no-empty-source": null
+  }
+}
