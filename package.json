@@ -6,7 +6,7 @@
     "start": "ng serve --open",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test-watch": "ng test --code-coverage --watch",
     "prettier": "prettier \"src/**/*.ts\" --write",
     "eslint": "eslint \"src/**\" --fix",
     "stylelint": "npx stylelint \"src/**/*.scss\" --fix --config=\".stylelintrc.json\"",
@@ -58,4 +58,3 @@
     "typescript-eslint": "^8.18.1"
   }
 }
-
