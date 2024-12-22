@@ -1,12 +1,24 @@
 {
   "plugins": ["stylelint-scss"],
+  "extends": "stylelint-config-standard",
   "rules": {
+    "no-descending-specificity": null,
+    "no-empty-source": null,
+    "no-unknown-animations": true,
+    "no-unknown-custom-media": true,
+    "color-named": "never",
+    "declaration-no-important": true,
     "scss/at-use-no-redundant-alias": true,
+    "scss/at-use-no-unnamespaced": true,
+    "scss/dollar-variable-first-in-block": true,
     "scss/block-no-redundant-nesting": true,
+    "scss/comment-no-empty": true,
+    "scss/comment-no-loud": true,
+    "scss/function-color-channel": true,
+    "scss/function-color-relative": true,
     "scss/property-no-unknown": true,
     "scss/no-duplicate-dollar-variables": true,
     "scss/no-duplicate-mixins": true,
-    "scss/no-unused-private-members": true,
-    "no-empty-source": null
+    "scss/no-unused-private-members": true
   }
 }
