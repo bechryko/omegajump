@@ -283,6 +283,10 @@
         // layout
         "@angular-eslint/template/prefer-self-closing-tags": "warn"
       }
+    },
+    {
+      "files": ["*.ts"],
+      "extends": ["plugin:@ngrx/all"]
     }
   ]
 }

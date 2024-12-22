@@ -9,6 +9,8 @@ import { provideRouter } from '@angular/router';
 import { provideTransloco } from '@jsverse/transloco';
 import { routes } from './app.routes';
 import { TranslocoHttpLoader } from './transloco-loader';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,13 +20,15 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideTransloco({
-      config: {
-        availableLangs: ['en'],
-        defaultLang: 'en',
-        reRenderOnLangChange: true,
-        prodMode: !isDevMode()
-      },
-      loader: TranslocoHttpLoader
-    })
-  ]
+        config: {
+            availableLangs: ['en'],
+            defaultLang: 'en',
+            reRenderOnLangChange: true,
+            prodMode: !isDevMode()
+        },
+        loader: TranslocoHttpLoader
+    }),
+    provideStore(),
+    provideEffects()
+]
 };
