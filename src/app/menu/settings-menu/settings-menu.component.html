@@ -1,0 +1,11 @@
+<h2>{{ 'MAIN_MENU.SETTINGS_MENU.TITLE' | transloco }}</h2>
+<oj-button (click)="navigateToMainMenu()">{{ 'MAIN_MENU.SETTINGS_MENU.BACK_BUTTON_TEXT' | transloco }}</oj-button>
+
+<div class="setting-wrapper">
+  <p class="label">{{ 'MAIN_MENU.SETTINGS_MENU.LANGUAGE_LABEL' | transloco }}</p>
+  <oj-select [(value)]="settings.language">
+    <oj-option value="en">{{ 'SHARED.LANGUAGE.ENGLISH' | transloco }}</oj-option>
+  </oj-select>
+</div>
+
+<oj-button (click)="saveSettings()">{{ 'MAIN_MENU.SETTINGS_MENU.SAVE_BUTTON_TEXT' | transloco }}</oj-button>
