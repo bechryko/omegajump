@@ -1,1 +1,38 @@
-{}
+{
+  "MAIN_MENU": {
+    "GAME_TITLE": "OmegaJump",
+    "PLAY_BUTTON_TEXT": "Play",
+    "SETTINGS_BUTTON_TEXT": "Settings",
+    "OMEGAPEDIA_BUTTON_TEXT": "Omegapedia",
+    "SETTINGS_MENU": {
+      "TITLE": "Settings",
+      "BACK_BUTTON_TEXT": "Back to main menu",
+      "LANGUAGE_LABEL": "Language",
+      "SAVE_BUTTON_TEXT": "Save settings"
+    }
+  },
+  "PLAY_MENU": {
+    "TITLE": "Choose a game mode!",
+    "SINGLEPLAYER_BUTTON_TEXT": "Singleplayer",
+    "BACK_BUTTON_TEXT": "Back to main menu",
+    "LOCATION_SELECTION_MENU": {
+      "TITLE": "Choose a location!",
+      "BACK_BUTTON_TEXT": "Back to game mode selection"
+    }
+  },
+  "OMEGAPEDIA": {
+    "TITLE": "Omegapedia",
+    "BACK_BUTTON_TEXT": "Back to main menu"
+  },
+  "COMPONENTS": {
+    "SELECT": {
+      "DEFAULT_NO_OPTION_LABEL": "No option selected"
+    }
+  },
+  "SHARED": {
+    "LANGUAGE": {
+      "ENGLISH": "English"
+    }
+  }
+}
+

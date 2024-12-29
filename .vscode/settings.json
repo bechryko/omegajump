@@ -15,10 +15,9 @@
   "files.eol": "\r\n",
   "files.insertFinalNewline": true,
   "eslint.validate": ["typescript"],
-  "html.format.wrapAttributes": "force",
   "prettier.endOfLine": "crlf",
   "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -33,5 +32,5 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "px-to-rem.px-per-rem": 16,
-  "cSpell.words": ["omegajump", "transloco"]
+  "cSpell.words": ["omegajump", "jsverse", "transloco", "ngrx", "endindex", "omegapedia", "singleplayer"]
 }

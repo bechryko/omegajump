@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  width: fit-content;
+  position: relative;
+  user-select: none;
+}
+
+.oj-select-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: fit-content;
+  background-color: #878787;
+
+  p {
+    display: block;
+    width: fit-content;
+  }
+}
+
+.oj-select-dropdown-wrapper {
+  position: absolute;
+}

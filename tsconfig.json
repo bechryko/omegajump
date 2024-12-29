@@ -16,7 +16,14 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "paths": {
+      "@omegajump-shared/*": ["./src/app/shared/*"],
+      "@omegajump-game": ["./src/app/game"],
+      "@omegajump-menu/*": ["./src/app/menu/*"],
+      "@omegajump-utilities/*": ["./src/app/utilities/*"],
+      "@omegapedia/*": ["./src/app/omegapedia/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
