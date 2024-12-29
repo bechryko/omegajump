@@ -11,7 +11,7 @@
     "eslint": "eslint \"src/**\" --fix",
     "stylelint": "npx stylelint \"src/**/*.scss\" --fix --config=\".stylelintrc.json\"",
     "code-format": "npm run prettier && npm run eslint && npm run stylelint",
-    "i18n:extract": "transloco-keys-manager extract --config \"src\" --sort --remove-extra-keys",
+    "i18n:extract": "transloco-keys-manager extract --config \"src\" --sort",
     "i18n:find": "transloco-keys-manager find --config \"src\" --add-missing-keys",
     "i18n": "npm run i18n:extract && npm run i18n:find"
   },
