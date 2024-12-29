@@ -15,10 +15,9 @@
   "files.eol": "\r\n",
   "files.insertFinalNewline": true,
   "eslint.validate": ["typescript"],
-  "html.format.wrapAttributes": "force",
   "prettier.endOfLine": "crlf",
   "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
