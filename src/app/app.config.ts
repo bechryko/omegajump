@@ -10,6 +10,7 @@ import { provideTransloco } from '@jsverse/transloco';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { Language } from '@omegajump-shared/enums';
+import { appReducer, AppState } from '@omegajump-shared/store';
 import { routes } from './app.routes';
 import { TranslocoHttpLoader } from './transloco-loader';
 
@@ -29,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       },
       loader: TranslocoHttpLoader
     }),
-    provideStore(),
+    provideStore<AppState>(appReducer),
     provideEffects()
   ]
 };
