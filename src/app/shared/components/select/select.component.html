@@ -1,0 +1,28 @@
+<div
+  #input
+  class="oj-select-input-wrapper"
+>
+  <p>Current value: {{ value() }}</p>
+  <button (click)="toggleDropdown()">v</button>
+</div>
+
+@if (open()) {
+  <!-- eslint-disable-next-line @angular-eslint/template/no-inline-styles -->
+  <div
+    class="oj-select-dropdown-wrapper"
+    [style.top.px]="input.offsetTop + input.offsetHeight"
+    [style.left.px]="input.offsetLeft"
+    [style.width.px]="input.offsetWidth"
+  >
+    @let extraOptionValue_ = extraOptionValue();
+    @if (extraOptionValue_ !== undefined) {
+      <oj-option
+        [value]="extraOptionValue_"
+        (click)="selectValue(extraOptionValue_)"
+      >
+        {{ defaultValueLabelKey() | transloco }}
+      </oj-option>
+    }
+    <ng-content />
+  </div>
+}
