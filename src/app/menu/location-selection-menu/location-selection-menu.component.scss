@@ -1,0 +1,5 @@
+@use 'styles/mixins';
+
+:host {
+  @include mixins.menu-style;
+}
