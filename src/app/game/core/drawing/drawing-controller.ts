@@ -1,10 +1,14 @@
 import { Drawable } from './models';
+import { BaseDrawingUtils } from './utils';
 
 export class DrawingController {
   private readonly ctx: CanvasRenderingContext2D;
   private drawingQueueMap: Record<number, Drawable[]> = {};
 
-  constructor(private readonly canvas: HTMLCanvasElement) {
+  constructor(
+    public readonly canvas: HTMLCanvasElement,
+    private readonly backgroundColor: string
+  ) {
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       throw new Error('2D rendering context not supported');
@@ -21,15 +25,27 @@ export class DrawingController {
   }
 
   public draw(): void {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.clearCanvas();
+
     Object.keys(this.drawingQueueMap)
       .map(Number)
       .sort((a, b) => a - b)
       .forEach(zIndex => {
-        this.drawingQueueMap[zIndex].forEach(drawingFunction => {
-          drawingFunction.draw(this.ctx);
+        this.drawingQueueMap[zIndex].forEach(drawable => {
+          drawable.draw(this.ctx);
         });
       });
     this.drawingQueueMap = {};
+  }
+
+  public bindToCtx<A extends Array<any>>(callback: (ctx: CanvasRenderingContext2D, ...args: A) => void, ...args: A): void {
+    callback(this.ctx, ...args);
+  }
+
+  private clearCanvas(): void {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    BaseDrawingUtils.setContextColor(this.ctx, this.backgroundColor);
+    BaseDrawingUtils.setContextOpacity(this.ctx, 1);
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }
