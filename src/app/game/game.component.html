@@ -1,2 +1,12 @@
-<canvas #gameCanvas></canvas>
-<p>{{ gameObject ? 'Game is initialized' : 'Game is not initialized' }}</p>
+@let description = locationDescription();
+<div
+  class="game-area-wrapper"
+  [style.aspect-ratio]="aspectRatio"
+  [ngStyle]="description | getTemplateStyles"
+>
+  <canvas #gameCanvas></canvas>
+  @if (description) {
+    <p class="ui-element location-name">{{ 'GAME.LOCATION.' + description.translationCode + '.NAME' | transloco }}</p>
+    <p class="ui-element score-counter">{{ score() }}</p>
+  }
+</div>

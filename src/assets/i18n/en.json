@@ -20,6 +20,13 @@
       "BACK_BUTTON_TEXT": "Back to game mode selection"
     }
   },
+  "GAME": {
+    "LOCATION": {
+      "CHAOS": {
+        "NAME": "The Chaos Zone"
+      }
+    }
+  },
   "OMEGAPEDIA": {
     "TITLE": "Omegapedia",
     "BACK_BUTTON_TEXT": "Back to main menu"
@@ -35,4 +42,3 @@
     }
   }
 }
-
