@@ -8,7 +8,11 @@ export abstract class LocationController implements Drawable {
     public readonly zIndex = ZIndex.UNUSED
   ) {}
 
-  public abstract tick(deltaTime: number): void;
-
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  /* eslint-disable @typescript-eslint/no-empty-function */
   public draw(ctx: CanvasRenderingContext2D): void {}
+  /* eslint-enable @typescript-eslint/no-empty-function */
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+
+  public abstract tick(deltaTime: number): void;
 }

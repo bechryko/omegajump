@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { Position } from '@omegajump-core/entities/models';
 import { Platform } from '@omegajump-core/entities/platforms';
 import { Player } from '@omegajump-core/entities/players';

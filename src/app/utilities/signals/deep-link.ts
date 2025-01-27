@@ -1,5 +1,7 @@
 import { linkedSignal, Signal, WritableSignal } from '@angular/core';
 
+/* eslint-disable @typescript-eslint/prefer-reduce-type-parameter */
+
 export function deepLink<T extends {}>(source: Signal<T>): Record<keyof T, WritableSignal<T[keyof T]>> {
   return Object.keys(source()).reduce(
     (acc, key) => ({

@@ -15,15 +15,19 @@ export class PlatformHandler {
   ): Platform {
     const spawningPlatformConfig = GameRandomUtils.weightedElement(spawningConfigs, 'spawningWeight');
     const additionalCreationConfig = spawningPlatformConfig.additionalCreationConfig ?? {};
+
     const modifiedAttributeConfig = [...attributeConfig];
-    spawningPlatformConfig.attributes?.forEach(attributeConfig => {
-      const existingAttributeIndex = modifiedAttributeConfig.findIndex(config => config.constructor === attributeConfig.constructor);
+    spawningPlatformConfig.attributes?.forEach(platformSpawningAttributeConfig => {
+      const existingAttributeIndex = modifiedAttributeConfig.findIndex(
+        config => config.constructor === platformSpawningAttributeConfig.constructor
+      );
       if (existingAttributeIndex !== -1) {
-        modifiedAttributeConfig.splice(existingAttributeIndex, 1, attributeConfig);
+        modifiedAttributeConfig.splice(existingAttributeIndex, 1, platformSpawningAttributeConfig);
       } else {
-        modifiedAttributeConfig.push(attributeConfig);
+        modifiedAttributeConfig.push(platformSpawningAttributeConfig);
       }
     });
+
     const modifiedCreationConfig: Readonly<PlatformCreationConfig> = {
       attributes: this.generateAttributeList(modifiedAttributeConfig),
       ...additionalCreationConfig,

@@ -9,7 +9,6 @@ import {
 } from '../models';
 import { ImageUtils } from './image.utils';
 
-// eslint-disable-next-line no-magic-numbers
 const FULL_CIRCLE_DEGREES = Math.PI * 2;
 
 const $ = MetricsUtils.convertOjUnitToPx;

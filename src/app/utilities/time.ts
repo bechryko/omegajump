@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 export function ms(amount: number): number {
   return amount;
 }

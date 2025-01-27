@@ -35,12 +35,12 @@ export class ImageUtils {
       }
 
       const image = new Image();
-      image.onload = () => {
+      image.onload = (): void => {
         ImageUtils.loadedImageMap[imageSrc] = image;
         observer.next(true);
         observer.complete();
       };
-      image.onerror = () => {
+      image.onerror = (): void => {
         observer.next(false);
         observer.complete();
       };

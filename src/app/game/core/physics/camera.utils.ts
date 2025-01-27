@@ -5,7 +5,8 @@ import { MetricsUtils } from './metrics.utils';
 export class CameraUtils {
   public static readonly MAINTAINABLE_TOP_PADDING = 15;
 
-  private static bottomY = signal(0);
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  private static readonly bottomY = signal(0);
 
   public static resetCameraPosition(): void {
     CameraUtils.moveCameraTo(0);

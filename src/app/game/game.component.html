@@ -1,8 +1,7 @@
 @let description = locationDescription();
 <div
   class="game-area-wrapper"
-  [style.aspect-ratio]="aspectRatio"
-  [ngStyle]="description | getTemplateStyles"
+  [ngStyle]="description | getTemplateStyles: aspectRatio"
 >
   <canvas #gameCanvas></canvas>
   @if (description) {

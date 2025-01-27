@@ -22,7 +22,7 @@ export class GameComponent {
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('gameCanvas');
   public readonly score = computed(() => Math.floor(CameraUtils.ySignal()));
   public readonly locationDescription = signal<LocationDescription | null>(null);
-  public gameObject?: GameObject;
+  private gameObject?: GameObject;
 
   constructor() {
     effect(() => {

@@ -4,6 +4,8 @@ import { ControlObjects } from '@omegajump-core/entities/models';
 import { Platform } from '@omegajump-core/entities/platforms';
 import { CameraUtils, MetricsUtils } from '@omegajump-core/physics';
 
+/* eslint-disable */
+
 export class Debugger {
   constructor(
     private readonly controlObjects: ControlObjects,

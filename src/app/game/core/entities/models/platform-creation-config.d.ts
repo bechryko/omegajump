@@ -8,7 +8,7 @@ import { Velocity } from './velocity';
 export interface PlatformCreationConfig {
   position: Position;
   velocity?: Velocity;
-  attributes?: (PlatformAttribute | PlatformAttributeConstructor)[];
+  attributes?: Array<PlatformAttribute | PlatformAttributeConstructor>;
   customGravityType?: GravityType;
   energyState?: EnergyState;
 }

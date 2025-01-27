@@ -5,16 +5,19 @@ import { LocationDescription } from '@omegajump-menu/location-selection-menu/loc
   name: 'getTemplateStyles'
 })
 export class GetTemplateStylesPipe implements PipeTransform {
-  public transform(locationDescription: LocationDescription | null): Record<string, string> | null {
+  public transform(locationDescription: LocationDescription | null, aspectRatio: string): Record<string, string> | null {
     if (!locationDescription) {
       return null;
     }
 
     const { style } = locationDescription;
+    /* eslint-disable @typescript-eslint/naming-convention */
     return {
       backgroundColor: style.backgroundColor,
       color: style.fontColor,
-      '--text-shadow-color': style.textShadowColor
+      '--text-shadow-color': style.textShadowColor,
+      aspectRatio
     };
+    /* eslint-enable @typescript-eslint/naming-convention */
   }
 }

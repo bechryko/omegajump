@@ -43,7 +43,7 @@ export abstract class Entity extends ObjectWithAnimations implements Drawable {
   }
 
   public distanceTo({ position }: { position: Position }): number {
-    return Math.sqrt(Math.pow(this.position.x - position.x, 2) + Math.pow(this.position.y - position.y, 2));
+    return Math.sqrt((this.position.x - position.x) ** 2 + (this.position.y - position.y) ** 2);
   }
 
   public distanceToVector({ position }: { position: Position }): Vector {

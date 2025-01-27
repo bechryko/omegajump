@@ -3,6 +3,7 @@ import { CircleAnimation } from '@omegajump-core/entities/animations';
 import { ControlObjects, Position, TemporaryEntity } from '@omegajump-core/entities/models';
 import { ZIndex } from '@omegajump-core/enums';
 import { CameraUtils, GravityType, MetricsUtils } from '@omegajump-core/physics';
+import { emptyFunction } from '@omegajump-utilities/technical';
 import { ChaosWildcard } from './models';
 
 export class GravityShocksWildcard extends ChaosWildcard {
@@ -41,7 +42,7 @@ export class GravityShocksWildcard extends ChaosWildcard {
 
     const temporaryEntity = new TemporaryEntity(
       {
-        drawFn: () => {},
+        drawFn: emptyFunction,
         position: {
           x: GameRandomUtils.between(
             GravityShocksWildcard.GRAVITY_SHOCK_SIDE_PADDING,
@@ -57,7 +58,7 @@ export class GravityShocksWildcard extends ChaosWildcard {
                 GravityShocksWildcard.GRAVITY_SHOCK_MAX_SCREEN_OVERFLOW
             )
         },
-        onTickFn: (deltaTime, entity) => {
+        onTickFn: (deltaTime, entity): void => {
           time += deltaTime;
 
           if (time >= GravityShocksWildcard.GRAVITY_SHOCK_CHARGE_TIME_S) {
@@ -91,7 +92,7 @@ export class GravityShocksWildcard extends ChaosWildcard {
         GravityShocksWildcard.GRAVITY_SHOCK_CHARGE_TIME_S,
         ZIndex.CHAOS_WILDCARD_GRAVITY_SHOCK,
         {
-          getLinkObject: () => ({
+          getLinkObject: (): Position => ({
             ...temporaryEntity.position
           }),
           map: {

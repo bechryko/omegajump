@@ -11,7 +11,7 @@ export interface LineAnimationConfig {
   opacity?: number;
 }
 
-export class LineAnimation<LinkT extends {} = any> extends OjAnimation<LineAnimationConfig, LinkT> {
+export class LineAnimation<LinkT extends {}> extends OjAnimation<LineAnimationConfig, LinkT> {
   public override draw(ctx: CanvasRenderingContext2D): void {
     BaseDrawingUtils.drawLine(ctx, this.currentConfig);
   }

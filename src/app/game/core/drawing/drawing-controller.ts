@@ -38,7 +38,8 @@ export class DrawingController {
     this.drawingQueueMap = {};
   }
 
-  public bindToCtx<A extends Array<any>>(callback: (ctx: CanvasRenderingContext2D, ...args: A) => void, ...args: A): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public bindToCtx<A extends any[]>(callback: (ctx: CanvasRenderingContext2D, ...args: A) => void, ...args: A): void {
     callback(this.ctx, ...args);
   }
 

@@ -21,12 +21,12 @@ export class TemporaryEntity extends Entity {
     this.resetVelocityIfLocked();
   }
 
-  protected override getGravityType(): GravityType {
-    return this.config.getGravityTypeFn?.(this) ?? GravityType.FLOATING;
-  }
-
   public override draw(ctx: CanvasRenderingContext2D): void {
     this.config.drawFn(ctx, this);
+  }
+
+  protected override getGravityType(): GravityType {
+    return this.config.getGravityTypeFn?.(this) ?? GravityType.FLOATING;
   }
 
   private resetVelocityIfLocked(): void {

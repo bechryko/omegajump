@@ -2,9 +2,10 @@ import { ZIndex } from '@omegajump-core/enums';
 import { CircleAnimation } from '../circle-animation';
 import { LineAnimation } from '../line-animation';
 import { BeamAnimationConfig, BlinkLineAnimationConfig, ExplosionAnimationConfig } from '../models';
+import { OjAnimation } from '../oj-animation';
 
 export class PresetAnimationUtils {
-  public static createBeam(config: BeamAnimationConfig): LineAnimation {
+  public static createBeam(config: BeamAnimationConfig): OjAnimation {
     return new LineAnimation(
       {
         x1: config.object1.position.x,
@@ -24,7 +25,7 @@ export class PresetAnimationUtils {
     );
   }
 
-  public static createBlinkLine(config: BlinkLineAnimationConfig): LineAnimation {
+  public static createBlinkLine(config: BlinkLineAnimationConfig): OjAnimation {
     return PresetAnimationUtils.createBeam({
       object1: config.object1,
       object2: config.object2,
@@ -41,7 +42,7 @@ export class PresetAnimationUtils {
   private static readonly EXPLOSION_ANIMATION_COLOR = 'orange';
   private static readonly EXPLOSION_ANIMATION_OPACITY = 0.5;
 
-  public static createExplosion(config: ExplosionAnimationConfig): CircleAnimation {
+  public static createExplosion(config: ExplosionAnimationConfig): OjAnimation {
     return new CircleAnimation(
       {
         ...config.position,

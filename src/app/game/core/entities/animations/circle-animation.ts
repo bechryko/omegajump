@@ -11,7 +11,7 @@ export interface CircleAnimationConfig {
   opacity?: number;
 }
 
-export class CircleAnimation<LinkT extends {} = any> extends OjAnimation<CircleAnimationConfig, LinkT> {
+export class CircleAnimation<LinkT extends {}> extends OjAnimation<CircleAnimationConfig, LinkT> {
   public override draw(ctx: CanvasRenderingContext2D): void {
     BaseDrawingUtils.drawCircle(ctx, this.currentConfig);
   }

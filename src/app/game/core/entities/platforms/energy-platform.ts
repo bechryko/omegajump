@@ -15,7 +15,7 @@ export class EnergyPlatform extends Platform {
   private depletedThisTick = false;
 
   constructor(controlObjects: ControlObjects) {
-    const imageSrcFactory = () => {
+    const imageSrcFactory = (): string => {
       switch (this.state) {
         case EnergyState.BLUE:
           return EnergyPlatform.BLUE_IMAGE_SRC;
