@@ -14,8 +14,8 @@ export class Player extends Entity {
   private static readonly HORIZONTAL_SPEED = 15;
   private static readonly STARTING_Y_POSITION = 0;
   private static readonly INITIAL_VERTICAL_JUMP_HEIGHT = MetricsUtils.GAME_HEIGHT_IN_OJ_UNITS * 0.4;
-  private static readonly ENERGY_HORIZONTAL_SPEED_BONUS = 0.015;
-  private static readonly ENERGY_JUMP_HEIGHT_BONUS = 0.015;
+  private static readonly ENERGY_HORIZONTAL_SPEED_BONUS = 0.01;
+  private static readonly ENERGY_JUMP_HEIGHT_BONUS = 0.01;
 
   private energy = 0;
   private readonly effects: Effect[] = [];
