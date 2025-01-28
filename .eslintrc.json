@@ -1,6 +1,5 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
   "overrides": [
     {
       "files": ["*.ts"],
@@ -50,15 +49,6 @@
         "no-lone-blocks": "error",
         "no-lonely-if": "error",
         "no-loop-func": "error",
-        "no-magic-numbers": [
-          "error",
-          {
-            "ignore": [0],
-            "ignoreClassFieldInitialValues": true,
-            "enforceConst": true,
-            "detectObjects": true
-          }
-        ],
         "no-multi-assign": "error",
         "no-multi-str": "error",
         "no-new": "error",
@@ -68,6 +58,13 @@
         "no-param-reassign": "error",
         "no-proto": "error",
         "no-redeclare": "off",
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "MethodDefinition[static = true] ThisExpression",
+            "message": "Static methods should not use 'this'."
+          }
+        ],
         "no-return-assign": "error",
         "no-script-url": "error",
         "no-sequences": "error",
@@ -82,7 +79,7 @@
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
         "no-useless-concat": "error",
-        "no-useless-constructor": "error",
+        "no-useless-constructor": "off",
         "no-useless-rename": "error",
         "no-useless-return": "error",
         "no-var": "error",
@@ -133,37 +130,6 @@
             "allowDirectConstAssertionInArrowFunctions": false
           }
         ],
-        "@typescript-eslint/member-ordering": [
-          "error",
-          {
-            "default": [
-              "signature",
-              "private-static-field",
-              "private-instance-field",
-              "private-field",
-              "protected-static-field",
-              "protected-instance-field",
-              "protected-abstract-field",
-              "protected-field",
-              "public-static-field",
-              "public-instance-field",
-              "public-abstract-field",
-              "public-field",
-              "constructor",
-              "public-static-method",
-              "public-instance-method",
-              "public-abstract-method",
-              "public-method",
-              "protected-static-method",
-              "protected-instance-method",
-              "protected-abstract-method",
-              "protected-method",
-              "private-static-method",
-              "private-instance-method",
-              "private-method"
-            ]
-          }
-        ],
         "@typescript-eslint/naming-convention": [
           "error",
           {
@@ -172,8 +138,8 @@
           },
           {
             "selector": "default",
-            "format": ["camelCase", "UPPER_CASE", "PascalCase", "_"],
-            "leadingUnderscore": "forbid",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+            "leadingUnderscore": "allow",
             "trailingUnderscore": "forbid"
           },
           {
@@ -202,7 +168,7 @@
         ],
         "@typescript-eslint/no-confusing-non-null-assertion": "error",
         "@typescript-eslint/no-deprecated": "warn",
-        "@typescript-eslint/no-empty-object-type": "error",
+        "@typescript-eslint/no-empty-object-type": "off",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-extra-non-null-assertion": "error",
         "@typescript-eslint/no-inferrable-types": [
@@ -287,7 +253,12 @@
         "@angular-eslint/template/no-duplicate-attributes": "error",
         // suggestions
         "@angular-eslint/template/conditional-complexity": "error",
-        "@angular-eslint/template/no-inline-styles": "error",
+        "@angular-eslint/template/no-inline-styles": [
+          "error",
+          {
+            "allowNgStyle": true
+          }
+        ],
         "@angular-eslint/template/no-interpolation-in-attributes": "warn",
         "@angular-eslint/template/prefer-control-flow": "warn",
         "@angular-eslint/template/prefer-ngsrc": "warn",

@@ -5,7 +5,7 @@ import {
   provideExperimentalCheckNoChangesForDebug,
   provideExperimentalZonelessChangeDetection
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideTransloco } from '@jsverse/transloco';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
@@ -17,9 +17,8 @@ import { TranslocoHttpLoader } from './transloco-loader';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
-    // eslint-disable-next-line no-magic-numbers
     provideExperimentalCheckNoChangesForDebug({ interval: 10 }),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(),
     provideTransloco({
       config: {

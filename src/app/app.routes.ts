@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Path } from '@omegajump-shared/enums';
-import { gameSetupGuard } from './game';
+import { gameSetupGuard, imagesPreloadResolver } from './game';
 
 export const routes: Routes = [
   {
@@ -26,7 +26,10 @@ export const routes: Routes = [
   {
     path: Path.GAME,
     loadComponent: () => import('./game').then(m => m.GameComponent),
-    canActivate: [gameSetupGuard]
+    canActivate: [gameSetupGuard],
+    resolve: {
+      imagesPreloadSuccess: imagesPreloadResolver
+    }
   },
   {
     path: '**',

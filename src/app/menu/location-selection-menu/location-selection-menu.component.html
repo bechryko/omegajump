@@ -1,5 +1,9 @@
-<h2>{{ "PLAY_MENU.LOCATION_SELECTION_MENU.TITLE" | transloco }}</h2>
-<oj-button (click)="startGame()">Start game</oj-button>
+<h2>{{ 'PLAY_MENU.LOCATION_SELECTION_MENU.TITLE' | transloco }}</h2>
+@for (description of locationDescriptions; track description.translationCode) {
+  <oj-button (click)="startGame(description)">
+    {{ 'GAME.LOCATION.' + description.translationCode + '.NAME' | transloco }}
+  </oj-button>
+}
 <oj-button (click)="navigateToPlayMenu()">
-  {{ "PLAY_MENU.LOCATION_SELECTION_MENU.BACK_BUTTON_TEXT" | transloco }}
+  {{ 'PLAY_MENU.LOCATION_SELECTION_MENU.BACK_BUTTON_TEXT' | transloco }}
 </oj-button>

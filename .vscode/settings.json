@@ -32,5 +32,5 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "px-to-rem.px-per-rem": 16,
-  "cSpell.words": ["omegajump", "jsverse", "transloco", "ngrx", "endindex", "omegapedia", "singleplayer"]
+  "cSpell.words": ["omegajump", "jsverse", "transloco", "ngrx", "endindex", "omegapedia", "singleplayer", "cloaker", "cooldown"]
 }
