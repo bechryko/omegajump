@@ -1,6 +1,7 @@
 import { LocationControllerConstructor } from '@omegajump-core/location-controllers';
 import { PlatformAttributeSpawningConfig } from './platform-attribute-spawning-config';
 import { PlatformSpawningConfig } from './platform-spawning-config';
+import { PowerCellSpawningConfig } from './power-cell-spawning-config';
 
 export interface GameConfigLocationPart {
   locationController: LocationControllerConstructor;
@@ -8,4 +9,5 @@ export interface GameConfigLocationPart {
   platformDistanceFluctuation: number;
   platformSpawning: PlatformSpawningConfig[];
   attributeSpawning: PlatformAttributeSpawningConfig[];
+  powerCellSpawning: PowerCellSpawningConfig[];
 }

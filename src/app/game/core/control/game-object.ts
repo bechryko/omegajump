@@ -1,10 +1,19 @@
+import { EventEmitter } from '@angular/core';
 import { GameConfig } from '@omegajump-core/configuration';
 import { DrawingController, UiDrawingUtils } from '@omegajump-core/drawing';
-import { PresetAnimationUtils } from '@omegajump-core/entities/animations';
-import { callOnDestroy, callOnPlayerJump, callOnPlayerMove, callOnTick } from '@omegajump-core/entities/entity-hooks';
+import { PresetAnimationFactory } from '@omegajump-core/entities/animations';
+import {
+  callBeforeJump,
+  callOnDestroy,
+  callOnPlayerJump,
+  callOnPlayerMove,
+  callOnPlayerTouch,
+  callOnTick
+} from '@omegajump-core/entities/entity-hooks';
 import { ControlObjects, Entity, Position } from '@omegajump-core/entities/models';
 import { Platform } from '@omegajump-core/entities/platforms';
-import { Player } from '@omegajump-core/entities/players';
+import { MagneticEffect, Player, ShieldEffect } from '@omegajump-core/entities/players';
+import { PowerCell } from '@omegajump-core/entities/power-cells';
 import { LocationController } from '@omegajump-core/location-controllers';
 import { CameraUtils, MetricsUtils } from '@omegajump-core/physics';
 import { Animator } from './animator';
@@ -13,6 +22,7 @@ import { GameRandomUtils } from './game-random.utils';
 import { ExplosionEvent, GlobalEventController, PlayerJumpOnPlatformEvent } from './global-events';
 import { PlatformHandler } from './platform-handler';
 import { PlayerHandler } from './player-handler';
+import { PowerCellHandler } from './power-cell-handler';
 import { TemporaryEntityHandler } from './temporary-entity-handler';
 
 export class GameObject {
@@ -21,12 +31,18 @@ export class GameObject {
   private static readonly VIRTUAL_TICK_DELTA_TIME_MS = 1;
   private static readonly PAUSE_GAME_KEY_CODE = 'Space';
   private static readonly AUTO_PAUSE_DELTA_TIME_THRESHOLD = 0.5;
+  private static readonly RESTART_GAME_KEY_CODE = 'Space';
+  private static readonly RESTART_GAME_WITH_SAME_SEED_KEY_CODE = 'Enter';
 
   private readonly controlObjects: ControlObjects;
+  private readonly powerCellHandler: PowerCellHandler;
   private readonly locationController: LocationController;
   private readonly debugger: Debugger;
 
+  public readonly restart = new EventEmitter<boolean>();
+
   private highestPlatformPos: Position = { x: -MetricsUtils.GAME_WIDTH_IN_OJ_UNITS, y: 0 };
+  private nextPowerCellGroupPos: Position = { x: MetricsUtils.GAME_WIDTH_IN_OJ_UNITS / 2, y: MetricsUtils.GAME_HEIGHT_IN_OJ_UNITS };
   private paused = false;
   private pausedOverlayDrawn = false;
 
@@ -34,13 +50,15 @@ export class GameObject {
     private readonly drawingController: DrawingController,
     private readonly config: GameConfig
   ) {
-    GameRandomUtils.registerSeed(this.config.seed ?? String(Math.random()));
+    GameRandomUtils.registerSeed(this.config.seed);
     CameraUtils.resetCameraPosition();
     this.controlObjects = this.createControlObjects();
+    this.powerCellHandler = new PowerCellHandler(this.controlObjects);
     this.locationController = new this.config.locationController(this.controlObjects);
-    this.debugger = new Debugger(this.controlObjects, drawingController);
+    this.debugger = new Debugger(this.controlObjects, drawingController, () => this.allowDebugging());
 
     MetricsUtils.setCanvasSize(this.drawingController.canvas);
+    this.controlObjects.playerHandler.createPlayers(this.config);
 
     this.listenToEvents();
     this.tick(Date.now());
@@ -90,15 +108,26 @@ export class GameObject {
 
       this.currentEntities.forEach(entity => {
         this.controlObjects.playerHandler.forEachAlivePlayer(player => {
-          if (
-            entity !== player &&
-            player.isFalling() &&
-            entity.collider.collides(player.collider) &&
-            player.position.y - Player.SIZE / 2 > entity.position.y
-          ) {
+          if (player.isFalling() && entity.collider.collides(player.collider) && player.position.y - Player.SIZE / 2 > entity.position.y) {
+            const isEntityPlatform = entity instanceof Platform;
+            if (isEntityPlatform) {
+              callBeforeJump(player, entity);
+            }
             const newPlatform = callOnPlayerJump(entity, player);
-            if (entity instanceof Platform) {
+            if (isEntityPlatform) {
               this.controlObjects.globalEventController.dispatchEvent(new PlayerJumpOnPlatformEvent(player, newPlatform ?? entity));
+            }
+          }
+        });
+      });
+
+      this.currentEntities.forEach(entity => {
+        this.controlObjects.playerHandler.forEachAlivePlayer(player => {
+          if (entity.collider.collides(player.collider)) {
+            callOnPlayerTouch(entity, player);
+
+            if (entity instanceof Platform && player.hasEffect(MagneticEffect) && player.isFalling()) {
+              callOnPlayerJump(entity, player);
             }
           }
         });
@@ -119,8 +148,11 @@ export class GameObject {
     this.controlObjects.temporaryEntityHandler.deleteDisabledEntities();
     CameraUtils.moveCameraAccordingToPlayerHeights(this.controlObjects.playerHandler.currentPlayers);
 
-    // platform spawning phase
+    // entity spawning phase
     this.spawnPlatforms();
+    if (!this.config.disablePowerCells) {
+      this.spawnPowerCells();
+    }
 
     return !this.isGameOver();
   }
@@ -167,12 +199,43 @@ export class GameObject {
     return x;
   }
 
+  private spawnPowerCells(): void {
+    while (
+      this.nextPowerCellGroupPos.y <
+      CameraUtils.y + MetricsUtils.GAME_HEIGHT_IN_OJ_UNITS + PowerCellHandler.POWER_CELL_GROUP_MAX_RADIUS
+    ) {
+      this.powerCellHandler.spawnPowerCellGroup(this.config.powerCellSpawning, this.nextPowerCellGroupPos);
+
+      this.nextPowerCellGroupPos = {
+        y:
+          this.nextPowerCellGroupPos.y +
+          GameRandomUtils.between(
+            PowerCellHandler.POWER_CELL_GROUP_MIN_VERTICAL_DISTANCE,
+            PowerCellHandler.POWER_CELL_GROUP_MAX_VERTICAL_DISTANCE
+          ),
+        x: GameRandomUtils.between(0, MetricsUtils.GAME_WIDTH_IN_OJ_UNITS)
+      };
+    }
+  }
+
   private listenToEvents(): void {
     this.controlObjects.globalEventController.watchEvents(ExplosionEvent).subscribe(event => {
       this.currentEntities
         .map(entity => [entity, entity.distanceTo(event)] as const)
         .filter(([, distance]) => distance <= event.radius)
         .forEach(([entity, distance]) => {
+          if (entity instanceof PowerCell) {
+            entity.destroy();
+            return;
+          }
+          if (entity instanceof Player) {
+            const shieldEffect = entity.getAppliedEffect(ShieldEffect);
+            if (shieldEffect) {
+              entity.removeEffect(shieldEffect);
+              return;
+            }
+          }
+
           const appliedPower =
             distance < event.centerRadius
               ? event.power
@@ -184,18 +247,28 @@ export class GameObject {
           entity.velocity.vertical += appliedVerticalPower;
         });
       this.controlObjects.animator.addAnimation(
-        PresetAnimationUtils.createExplosion({
+        PresetAnimationFactory.createExplosion({
           position: event.position,
           radius: event.radius
         })
       );
     });
 
-    document.addEventListener('keydown', event => {
-      if (event.code === GameObject.PAUSE_GAME_KEY_CODE) {
-        this.togglePause();
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (!this.isGameOver()) {
+        if (event.code === GameObject.PAUSE_GAME_KEY_CODE) {
+          this.togglePause();
+        }
+        return;
       }
-    });
+
+      if (event.code === GameObject.RESTART_GAME_KEY_CODE || event.code === GameObject.RESTART_GAME_WITH_SAME_SEED_KEY_CODE) {
+        this.restart.emit(event.code === GameObject.RESTART_GAME_WITH_SAME_SEED_KEY_CODE);
+        document.removeEventListener('keydown', onKeyDown);
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
   }
 
   private isGameOver(): boolean {
@@ -203,11 +276,11 @@ export class GameObject {
   }
 
   private onGameEnd(): void {
+    this.drawingController.bindToCtx(UiDrawingUtils.drawGameOverOverlay);
+
     this.currentEntities.forEach(entity => callOnDestroy(entity));
 
     GameRandomUtils.unregisterSeed();
-
-    console.log('game over');
   }
 
   private deleteEntities(): void {
@@ -225,6 +298,10 @@ export class GameObject {
     }
   }
 
+  private allowDebugging(): boolean {
+    return !this.isGameOver();
+  }
+
   private virtualTick(deltaTime: number, callback: (deltaTime: number) => void): void {
     const virtualTickDeltaTime = GameObject.VIRTUAL_TICK_DELTA_TIME_MS / 1000;
     const virtualTickNumber = Math.floor(deltaTime / virtualTickDeltaTime);
@@ -238,26 +315,23 @@ export class GameObject {
     return [
       ...this.controlObjects.platformHandler.getCurrentPlatforms(),
       ...this.controlObjects.playerHandler.currentPlayers,
+      ...this.powerCellHandler.getCurrentPowerCells(),
       ...this.controlObjects.temporaryEntityHandler.entities
     ];
   }
 
   private createControlObjects(): ControlObjects {
+    const unstableControlObjects: Partial<ControlObjects> = {};
     const animator = new Animator();
+    unstableControlObjects.animator = animator;
     const temporaryEntityHandler = new TemporaryEntityHandler();
+    unstableControlObjects.temporaryEntityHandler = temporaryEntityHandler;
     const globalEventController = new GlobalEventController();
-    const playerHandler = new PlayerHandler(this.config, animator);
-    const controlObjectsWithoutPlatformHandler = {
-      playerHandler,
-      temporaryEntityHandler,
-      animator,
-      globalEventController
-    };
-    const platformHandler = new PlatformHandler(controlObjectsWithoutPlatformHandler);
-    const controlObjects = {
-      ...controlObjectsWithoutPlatformHandler,
-      platformHandler
-    };
-    return controlObjects;
+    unstableControlObjects.globalEventController = globalEventController;
+    const playerHandler = new PlayerHandler(unstableControlObjects as ControlObjects);
+    unstableControlObjects.playerHandler = playerHandler;
+    const platformHandler = new PlatformHandler(unstableControlObjects as ControlObjects);
+    unstableControlObjects.platformHandler = platformHandler;
+    return unstableControlObjects as ControlObjects;
   }
 }

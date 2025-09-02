@@ -1,3 +1,3 @@
-import { Effect } from './effect';
+import { Effect } from './models';
 
 export class ConfusionEffect extends Effect {}

@@ -9,9 +9,14 @@ import { CameraUtils, MetricsUtils } from '@omegajump-core/physics';
 export class Debugger {
   constructor(
     private readonly controlObjects: ControlObjects,
-    private readonly drawingController: DrawingController
+    private readonly drawingController: DrawingController,
+    private readonly allowDebugging: () => boolean
   ) {
     globalThis.addEventListener('mousedown', event => {
+      if (!this.allowDebugging()) {
+        return;
+      }
+
       const x = MetricsUtils.convertPxToOjUnit(event.offsetX);
       const y = CameraUtils.fromDrawableViewportY(MetricsUtils.convertPxToOjUnit(event.clientY));
       const clickCollider: any = {

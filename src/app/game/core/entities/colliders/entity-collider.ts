@@ -6,6 +6,10 @@ export class EntityCollider {
   constructor(private readonly collisionBoxes: CollisionBox[]) {}
 
   public collides(other: EntityCollider): boolean {
+    if (other === this) {
+      return false;
+    }
+
     return this.collisionBoxes.some(box => other.collisionBoxes.some(otherBox => this.boxCollides(box, otherBox)));
   }
 

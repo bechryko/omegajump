@@ -6,4 +6,8 @@ export class GravityUtils {
   public static getVerticalVelocityBasedOnDistance(distance: number, gravityType = GravityType.NORMAL): number {
     return Math.sqrt(2 * gravityType * distance);
   }
+
+  public static getDistanceBasedOnVerticalVelocity(velocity: number, gravityType = GravityType.NORMAL): number {
+    return velocity ** 2 / (2 * gravityType);
+  }
 }

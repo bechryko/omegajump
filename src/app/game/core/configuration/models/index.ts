@@ -8,4 +8,6 @@ export { PlatformConstructor } from './platform-constructor.d';
 export { PlatformSpawningConfig } from './platform-spawning-config.d';
 export { PlayerConfig } from './player-config.d';
 export { PlayerControlsConfig } from './player-controls-config.d';
+export { PowerCellConstructor } from './power-cell-constructor.d';
+export { PowerCellSpawningConfig } from './power-cell-spawning-config.d';
 //@endindex

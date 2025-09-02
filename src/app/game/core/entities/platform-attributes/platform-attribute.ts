@@ -1,3 +1,4 @@
+import { Drawable } from '@omegajump-core/drawing';
 import { ControlObjects, ObjectWithAnimations } from '../models';
 import { Platform } from '../platforms';
 
@@ -6,10 +7,14 @@ export abstract class PlatformAttribute extends ObjectWithAnimations {
     protected hostPlatform: Platform,
     protected controlObjects: ControlObjects
   ) {
-    super(controlObjects.animator);
+    super();
   }
 
   public bindNewHost(newHost: Platform): void {
     this.hostPlatform = newHost;
+  }
+
+  public getAllDrawables(): Drawable[] {
+    return this.animations;
   }
 }

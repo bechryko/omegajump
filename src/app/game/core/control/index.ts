@@ -5,6 +5,7 @@ export { GameObject } from './game-object';
 export { GameRandomUtils } from './game-random.utils';
 export { PlatformHandler } from './platform-handler';
 export { PlayerHandler } from './player-handler';
+export { PowerCellHandler } from './power-cell-handler';
 export { TemporaryEntityHandler } from './temporary-entity-handler';
 //@endindex
 export * from './global-events';

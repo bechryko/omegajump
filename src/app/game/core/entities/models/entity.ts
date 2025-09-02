@@ -1,7 +1,7 @@
-import { Animator } from '@omegajump-core/control';
 import { Drawable } from '@omegajump-core/drawing';
 import { GravityType, GravityUtils } from '@omegajump-core/physics';
 import { EntityCollider } from '../colliders';
+import { ControlObjects } from './control-objects';
 import { ObjectWithAnimations } from './object-with-animations';
 import { Position } from './position';
 import { Vector } from './vector';
@@ -15,13 +15,13 @@ export abstract class Entity extends ObjectWithAnimations implements Drawable {
   public disabled = true;
 
   constructor(
-    animator: Animator,
+    protected readonly controlObjects: ControlObjects,
     public readonly position: Position,
     public readonly collider: EntityCollider,
     public readonly zIndex: number,
     public readonly deletionYThreshold: number
   ) {
-    super(animator);
+    super();
   }
 
   public override onTick(deltaTime: number): void {
@@ -35,6 +35,10 @@ export abstract class Entity extends ObjectWithAnimations implements Drawable {
     this.decreaseSpeedByGravity(deltaTime, 'horizontal');
 
     super.onTick(deltaTime);
+  }
+
+  public getAllDrawables(): Drawable[] {
+    return [this, ...this.animations];
   }
 
   public destroy(): void {

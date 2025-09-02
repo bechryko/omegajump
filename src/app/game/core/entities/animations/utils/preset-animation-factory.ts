@@ -4,7 +4,7 @@ import { LineAnimation } from '../line-animation';
 import { BeamAnimationConfig, BlinkLineAnimationConfig, ExplosionAnimationConfig } from '../models';
 import { OjAnimation } from '../oj-animation';
 
-export class PresetAnimationUtils {
+export class PresetAnimationFactory {
   public static createBeam(config: BeamAnimationConfig): OjAnimation {
     return new LineAnimation(
       {
@@ -20,13 +20,15 @@ export class PresetAnimationUtils {
         lineWidth: config.finalWidth ?? config.startingWidth,
         opacity: config.finalOpacity ?? config.startingOpacity
       },
-      config.duration,
-      config.zIndex
+      {
+        duration: config.duration,
+        zIndex: config.zIndex
+      }
     );
   }
 
   public static createBlinkLine(config: BlinkLineAnimationConfig): OjAnimation {
-    return PresetAnimationUtils.createBeam({
+    return PresetAnimationFactory.createBeam({
       object1: config.object1,
       object2: config.object2,
       color: config.color,
@@ -38,7 +40,7 @@ export class PresetAnimationUtils {
     });
   }
 
-  private static readonly EXPLOSION_ANIMATION_SPEED = 100;
+  private static readonly EXPLOSION_ANIMATION_SPEED = 150;
   private static readonly EXPLOSION_ANIMATION_COLOR = 'orange';
   private static readonly EXPLOSION_ANIMATION_OPACITY = 0.5;
 
@@ -47,14 +49,16 @@ export class PresetAnimationUtils {
       {
         ...config.position,
         radius: 0,
-        color: PresetAnimationUtils.EXPLOSION_ANIMATION_COLOR,
-        opacity: PresetAnimationUtils.EXPLOSION_ANIMATION_OPACITY
+        color: config.color ?? PresetAnimationFactory.EXPLOSION_ANIMATION_COLOR,
+        opacity: config.opacity ?? PresetAnimationFactory.EXPLOSION_ANIMATION_OPACITY
       },
       {
         radius: config.radius
       },
-      config.radius / PresetAnimationUtils.EXPLOSION_ANIMATION_SPEED,
-      ZIndex.EXPLOSION
+      {
+        duration: config.radius / (config.animationSpeed ?? PresetAnimationFactory.EXPLOSION_ANIMATION_SPEED),
+        zIndex: ZIndex.EXPLOSION
+      }
     );
   }
 }

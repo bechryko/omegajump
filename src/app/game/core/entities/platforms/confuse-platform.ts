@@ -15,6 +15,6 @@ export class ConfusePlatform extends Platform {
   public override onPlayerJump(player: Player): void {
     super.onPlayerJump(player);
 
-    player.applyEffect(ConfusionEffect, ConfusePlatform.CONFUSION_DURATION);
+    player.applyEffect(ConfusionEffect, { creationConfig: { duration: ConfusePlatform.CONFUSION_DURATION } });
   }
 }

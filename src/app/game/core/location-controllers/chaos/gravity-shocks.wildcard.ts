@@ -1,5 +1,5 @@
 import { GameRandomUtils } from '@omegajump-core/control';
-import { CircleAnimation } from '@omegajump-core/entities/animations';
+import { AnimationLinkFactory, CircleAnimation } from '@omegajump-core/entities/animations';
 import { ControlObjects, Position, TemporaryEntity } from '@omegajump-core/entities/models';
 import { ZIndex } from '@omegajump-core/enums';
 import { CameraUtils, GravityType, MetricsUtils } from '@omegajump-core/physics';
@@ -14,7 +14,7 @@ export class GravityShocksWildcard extends ChaosWildcard {
   private static readonly GRAVITY_SHOCK_SIDE_PADDING = 5;
   private static readonly GRAVITY_SHOCK_COLOR = '#5a758e';
   private static readonly GRAVITY_SHOCK_MAX_RADIUS = 13;
-  private static readonly GRAVITY_SHOCK_CHARGE_TIME_S = 3;
+  private static readonly GRAVITY_SHOCK_CHARGE_TIME = 3;
   private static readonly GRAVITY_SHOCK_FINAL_OPACITY = 0.6;
 
   private nextGravityShock = 0;
@@ -61,7 +61,7 @@ export class GravityShocksWildcard extends ChaosWildcard {
         onTickFn: (deltaTime, entity): void => {
           time += deltaTime;
 
-          if (time >= GravityShocksWildcard.GRAVITY_SHOCK_CHARGE_TIME_S) {
+          if (time >= GravityShocksWildcard.GRAVITY_SHOCK_CHARGE_TIME) {
             this.controlObjects.platformHandler.getCurrentPlatforms().forEach(platform => {
               if (platform.distanceTo(entity) < GravityShocksWildcard.GRAVITY_SHOCK_MAX_RADIUS) {
                 platform.overrideGravity(GravityType.LOW);
@@ -74,7 +74,7 @@ export class GravityShocksWildcard extends ChaosWildcard {
         deletionYThreshold: -GravityShocksWildcard.GRAVITY_SHOCK_MAX_RADIUS,
         lockedInPlace: true
       },
-      this.controlObjects.animator
+      this.controlObjects
     );
     this.controlObjects.temporaryEntityHandler.add(temporaryEntity).addAnimation(
       new CircleAnimation<Position>(
@@ -89,16 +89,10 @@ export class GravityShocksWildcard extends ChaosWildcard {
           radius: GravityShocksWildcard.GRAVITY_SHOCK_MAX_RADIUS,
           opacity: GravityShocksWildcard.GRAVITY_SHOCK_FINAL_OPACITY
         },
-        GravityShocksWildcard.GRAVITY_SHOCK_CHARGE_TIME_S,
-        ZIndex.CHAOS_WILDCARD_GRAVITY_SHOCK,
         {
-          getLinkObject: (): Position => ({
-            ...temporaryEntity.position
-          }),
-          map: {
-            x: 'x',
-            y: 'y'
-          }
+          duration: GravityShocksWildcard.GRAVITY_SHOCK_CHARGE_TIME,
+          zIndex: ZIndex.CHAOS_WILDCARD_GRAVITY_SHOCK,
+          link: AnimationLinkFactory.createPositionLink(temporaryEntity)
         }
       )
     );

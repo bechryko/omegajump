@@ -1,15 +1,15 @@
-import { Animator } from '@omegajump-core/control';
 import { GravityType } from '@omegajump-core/physics';
 import { EntityCollider } from '../colliders';
+import { ControlObjects } from './control-objects';
 import { Entity } from './entity';
 import { TemporaryEntityConfig } from './temporary-entity-config';
 
 export class TemporaryEntity extends Entity {
   constructor(
     private readonly config: TemporaryEntityConfig,
-    animator: Animator
+    controlObjects: ControlObjects
   ) {
-    super(animator, { ...config.position }, config.collider ?? new EntityCollider([]), config.zIndex, config.deletionYThreshold);
+    super(controlObjects, { ...config.position }, config.collider ?? new EntityCollider([]), config.zIndex, config.deletionYThreshold);
     this.disabled = false;
   }
 

@@ -3,7 +3,11 @@ import seedrandom from 'seedrandom';
 export class GameRandomUtils {
   private static random?: seedrandom.PRNG;
 
-  public static registerSeed(seed: string): void {
+  public static registerSeed(seed?: string): void {
+    if (!seed) {
+      throw new Error('Seed is required');
+    }
+
     GameRandomUtils.random = seedrandom(seed);
   }
 
@@ -11,7 +15,7 @@ export class GameRandomUtils {
     GameRandomUtils.random = undefined;
   }
 
-  public static nextNumber(max: number): number {
+  public static nextNumber(max = 1): number {
     if (GameRandomUtils.random === undefined) {
       throw new Error('Seed is not set');
     }
@@ -56,5 +60,15 @@ export class GameRandomUtils {
 
   public static chance(chance: number): boolean {
     return GameRandomUtils.nextNumber(1) < chance;
+  }
+
+  public static randomPointInCircle(x: number, y: number, radius: number): { x: number; y: number } {
+    const distance = radius * Math.sqrt(GameRandomUtils.nextNumber());
+    const angle = GameRandomUtils.nextNumber(2 * Math.PI);
+
+    return {
+      x: x + distance * Math.cos(angle),
+      y: y + distance * Math.sin(angle)
+    };
   }
 }

@@ -1,11 +1,24 @@
-@let description = locationDescription();
+<!-- eslint-disable @angular-eslint/template/no-inline-styles -->
 <div
   class="game-area-wrapper"
-  [ngStyle]="description | getTemplateStyles: aspectRatio"
+  [ngStyle]="locationDescription | getTemplateStyles: aspectRatio"
 >
   <canvas #gameCanvas></canvas>
-  @if (description) {
-    <p class="ui-element location-name">{{ 'GAME.LOCATION.' + description.translationCode + '.NAME' | transloco }}</p>
-    <p class="ui-element score-counter">{{ score() }}</p>
+  <p class="ui-element location-name">{{ 'GAME.LOCATION.' + locationDescription.translationCode + '.NAME' | transloco }}</p>
+  <p class="ui-element score-counter">{{ score() }}</p>
+  @for (player of players(); track player.color) {
+    <div
+      class="ui-element player-info"
+      [style.backgroundColor]="player.color()"
+    >
+      <p>Energy: {{ player.energy() }}</p>
+      @if (player.powerCellCombo()) {
+        <p>Combo: {{ player.powerCellCombo() }}</p>
+        <div
+          class="power-cell-combo-duration"
+          [style.width]="getPowerCellComboDurationWidth(player.powerCellComboExpiration())"
+        ></div>
+      }
+    </div>
   }
 </div>

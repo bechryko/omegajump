@@ -53,7 +53,7 @@ export class TransformerPlatform extends Platform {
         return;
       }
 
-      platformConfigs.push(platform.extractCreationConfig());
+      platformConfigs.push(platform.extractCreationConfig({ move: true }));
       platform.destroy();
     });
 
@@ -61,7 +61,7 @@ export class TransformerPlatform extends Platform {
       this.controlObjects.platformHandler.spawnPlatform(TransformerPlatform.SPAWNING_CONFIG, [], platformConfig)
     );
 
-    const ownConfig = this.extractCreationConfig();
+    const ownConfig = this.extractCreationConfig({ move: true });
     this.destroy();
     return this.controlObjects.platformHandler.spawnPlatform(TransformerPlatform.SPAWNING_CONFIG, [], ownConfig);
   }

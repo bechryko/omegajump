@@ -27,4 +27,7 @@ export interface BlinkLineAnimationConfig {
 export interface ExplosionAnimationConfig {
   position: Position;
   radius: number;
+  color?: string;
+  opacity?: number;
+  animationSpeed?: number;
 }

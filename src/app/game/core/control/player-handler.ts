@@ -1,16 +1,13 @@
 import { GameConfig } from '@omegajump-core/configuration';
-import { KeyboardController, Player } from '@omegajump-core/entities/players';
+import { ControlObjects } from '@omegajump-core/entities/models';
+import { Comet, KeyboardController, Player } from '@omegajump-core/entities/players';
 import { MetricsUtils } from '@omegajump-core/physics';
-import { Animator } from './animator';
 
 export class PlayerHandler {
   private readonly list: Player[] = [];
 
-  constructor(
-    gameConfig: GameConfig,
-    private readonly animator: Animator
-  ) {
-    this.createPlayers(gameConfig);
+  constructor(private readonly controlObjects: ControlObjects) {
+    // Do not use the controlObjects property in the constructor due to it can be incomplete.
   }
 
   public forEachAlivePlayer(callback: (player: Player) => void): void {
@@ -25,9 +22,19 @@ export class PlayerHandler {
     return this.list.filter(player => !player.disabled);
   }
 
-  private createPlayers(gameConfig: GameConfig): void {
+  public createCometForPlayer(player: Player, duration: number, horizontalAcceleration: number): void {
+    const existingComet = this.list.filter(p => p instanceof Comet).find(comet => comet.isForPlayer(player));
+    if (existingComet) {
+      existingComet.init(duration, horizontalAcceleration);
+    } else {
+      this.list.push(new Comet(player, this.controlObjects, duration, horizontalAcceleration));
+    }
+  }
+
+  public createPlayers(gameConfig: GameConfig): void {
     const players = gameConfig.playerConfigs.map(
-      config => new Player(this.animator, MetricsUtils.GAME_WIDTH_IN_OJ_UNITS / 2, config.color, new KeyboardController(config.controls))
+      config =>
+        new Player(this.controlObjects, MetricsUtils.GAME_WIDTH_IN_OJ_UNITS / 2, config.color, new KeyboardController(config.controls))
     );
     this.list.push(...players);
   }

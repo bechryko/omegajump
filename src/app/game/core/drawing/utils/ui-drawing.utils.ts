@@ -24,4 +24,25 @@ export class UiDrawingUtils {
       });
     }
   }
+
+  private static readonly GAME_OVER_OVERLAY_COLOR = '#000000';
+  private static readonly GAME_OVER_OVERLAY_OPACITY = 0.6;
+  private static readonly GAME_OVER_TEXT_COLOR = '#b63838';
+  private static readonly GAME_OVER_TEXT_SIZE = 6;
+
+  public static drawGameOverOverlay(ctx: CanvasRenderingContext2D): void {
+    BaseDrawingUtils.drawOverlay(ctx, {
+      color: UiDrawingUtils.GAME_OVER_OVERLAY_COLOR,
+      opacity: UiDrawingUtils.GAME_OVER_OVERLAY_OPACITY
+    });
+
+    BaseDrawingUtils.drawText(ctx, {
+      text: 'Game over!',
+      x: MetricsUtils.GAME_WIDTH_IN_OJ_UNITS / 2,
+      y: MetricsUtils.GAME_HEIGHT_IN_OJ_UNITS / 2,
+      fontSize: UiDrawingUtils.GAME_OVER_TEXT_SIZE,
+      color: UiDrawingUtils.GAME_OVER_TEXT_COLOR,
+      isFixed: true
+    });
+  }
 }

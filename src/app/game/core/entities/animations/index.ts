@@ -1,5 +1,6 @@
 //@index('./*', (f, _) => `export * from '${f.path}';`)
 export * from './circle-animation';
+export * from './enums';
 export * from './image-animation';
 export * from './line-animation';
 export * from './models';

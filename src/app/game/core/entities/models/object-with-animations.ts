@@ -1,15 +1,11 @@
-import { Animator } from '@omegajump-core/control';
 import { OjAnimation } from '../animations';
 import { OnDestroy, OnTick } from '../entity-hooks';
 
 export abstract class ObjectWithAnimations implements OnTick, OnDestroy {
-  private readonly animations: OjAnimation[] = [];
-
-  constructor(private readonly animator: Animator) {}
+  protected readonly animations: OjAnimation[] = [];
 
   public addAnimation(animation: OjAnimation): void {
     this.animations.push(animation);
-    this.animator.addEntityAnimation(animation);
   }
 
   public onTick(deltaTime: number): void {
