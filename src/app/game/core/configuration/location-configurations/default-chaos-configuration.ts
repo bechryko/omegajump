@@ -7,6 +7,15 @@ import {
   SolidPlatform,
   TransformerPlatform
 } from '@omegajump-core/entities/platforms';
+import {
+  CometPowerCell,
+  DecoyPowerCell,
+  DoubleJumpPowerCell,
+  GravitonCatalystPowerCell,
+  MagnetPowerCell,
+  ShieldingPowerCell,
+  SpeedPowerCell
+} from '@omegajump-core/entities/power-cells';
 import { ChaosLocationController } from '@omegajump-core/location-controllers';
 import { GameConfigLocationPart } from '../models';
 
@@ -55,6 +64,36 @@ export const defaultChaosConfiguration: GameConfigLocationPart = {
     {
       constructor: BoosterAttribute,
       spawnChance: 0.045
+    }
+  ],
+  powerCellSpawning: [
+    {
+      constructor: GravitonCatalystPowerCell,
+      spawningWeight: 2
+    },
+    {
+      constructor: DoubleJumpPowerCell,
+      spawningWeight: 3
+    },
+    {
+      constructor: MagnetPowerCell,
+      spawningWeight: 2
+    },
+    {
+      constructor: SpeedPowerCell,
+      spawningWeight: 3
+    },
+    {
+      constructor: ShieldingPowerCell,
+      spawningWeight: 2
+    },
+    {
+      constructor: CometPowerCell,
+      spawningWeight: 1
+    },
+    {
+      constructor: DecoyPowerCell,
+      spawningWeight: 0.25
     }
   ]
 };

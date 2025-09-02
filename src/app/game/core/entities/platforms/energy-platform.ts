@@ -1,4 +1,4 @@
-import { ControlObjects, PlatformCreationConfig } from '../models';
+import { ControlObjects, PlatformCreationConfig, PlatformExtractionConfig } from '../models';
 import { Player } from '../players';
 import { Platform } from './platform';
 
@@ -31,12 +31,14 @@ export class EnergyPlatform extends Platform {
     this.state = config.energyState ?? EnergyState.EMPTY;
   }
 
-  public override extractCreationConfig(): PlatformCreationConfig {
+  public override extractCreationConfig(extractionConfig?: PlatformExtractionConfig): PlatformCreationConfig {
     const config: PlatformCreationConfig = {
       ...super.extractCreationConfig(),
       energyState: this.state
     };
-    this.state = EnergyState.EMPTY;
+    if (extractionConfig?.move) {
+      this.state = EnergyState.EMPTY;
+    }
     return config;
   }
 

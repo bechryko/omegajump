@@ -1,5 +1,5 @@
 import { ZIndex } from '@omegajump-core/enums';
-import { PresetAnimationUtils } from '../animations';
+import { PresetAnimationFactory } from '../animations';
 import { ControlObjects } from '../models';
 import { BoosterAttribute } from '../platform-attributes';
 import { Player } from '../players';
@@ -31,7 +31,7 @@ export class BlackHolePlatform extends Platform {
       platform.position.y += distance.y * this.pullStrength;
 
       this.controlObjects.animator.addAnimation(
-        PresetAnimationUtils.createBeam({
+        PresetAnimationFactory.createBeam({
           object1: this,
           object2: platform,
           color: BlackHolePlatform.PULLING_BEAM_COLOR,

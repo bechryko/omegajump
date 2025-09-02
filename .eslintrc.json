@@ -253,12 +253,7 @@
         "@angular-eslint/template/no-duplicate-attributes": "error",
         // suggestions
         "@angular-eslint/template/conditional-complexity": "error",
-        "@angular-eslint/template/no-inline-styles": [
-          "error",
-          {
-            "allowNgStyle": true
-          }
-        ],
+        "@angular-eslint/template/no-inline-styles": ["error"],
         "@angular-eslint/template/no-interpolation-in-attributes": "warn",
         "@angular-eslint/template/prefer-control-flow": "warn",
         "@angular-eslint/template/prefer-ngsrc": "warn",

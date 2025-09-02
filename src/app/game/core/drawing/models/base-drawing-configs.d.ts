@@ -30,23 +30,20 @@ export interface LineDrawingConfig extends CommonDrawingConfig {
   lineCap?: CanvasLineCap;
 }
 
+interface CommonImageDrawingConfig extends Omit<CommonDrawingConfig, 'color'> {
+  imageSrc: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export type ImageDrawingConfig =
-  | {
-      imageSrc: string;
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }
-  | {
-      imageSrc: string;
+  | CommonImageDrawingConfig
+  | (CommonImageDrawingConfig & {
       frameToDrawIdx: number;
       frameNumber: number;
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    };
+    });
 
 export interface TextDrawingConfig extends CommonDrawingConfig {
   text: string;

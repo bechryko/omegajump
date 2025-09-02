@@ -1,5 +1,5 @@
 import { GameRandomUtils } from '@omegajump-core/control';
-import { PresetAnimationUtils } from '../animations';
+import { PresetAnimationFactory } from '../animations';
 import { OnPlayerJump } from '../entity-hooks';
 import { EnergyPlatform, SolidPlatform } from '../platforms';
 import { Player } from '../players';
@@ -26,7 +26,7 @@ export class ActivatorAttribute extends PlatformAttribute implements OnPlayerJum
     }
 
     this.controlObjects.animator.addAnimation(
-      PresetAnimationUtils.createBlinkLine({
+      PresetAnimationFactory.createBlinkLine({
         object1: this.hostPlatform,
         object2: platform,
         width: ActivatorAttribute.ACTIVATOR_LINE_STARTING_WIDTH,

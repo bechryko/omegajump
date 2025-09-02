@@ -1,36 +1,38 @@
 import { Drawable } from '@omegajump-core/drawing';
-import { AnimationLink } from './models';
+import { AnimationRepeat } from './enums';
+import { AnimationCreationConfig } from './models';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class OjAnimation<ConfigT extends {} = any, LinkT extends {} = any> implements Drawable {
   protected readonly rawCurrentConfig: ConfigT;
   private _time = 0;
   private manuallyFinished = false;
+  private direction = 1;
+  public readonly zIndex: number;
 
   constructor(
     protected readonly startingConfig: ConfigT,
     protected readonly finalConfigChanges: Partial<Record<keyof ConfigT, number>>,
-    protected readonly duration: number,
-    public readonly zIndex: number,
-    private readonly link?: AnimationLink<ConfigT, LinkT>
+    protected readonly creationConfig: AnimationCreationConfig<ConfigT, LinkT>
   ) {
     this.rawCurrentConfig = { ...startingConfig };
+    this.zIndex = creationConfig.zIndex;
   }
 
   public tick(deltaTime: number): void {
-    this.time += deltaTime;
+    this.time += deltaTime * this.direction;
 
     Object.keys(this.finalConfigChanges).forEach(k => {
       const key = k as keyof ConfigT;
       const startingValue = this.startingConfig[key] as number;
       const finalValue = this.finalConfigChanges[key]!;
       const difference = finalValue - startingValue;
-      (this.rawCurrentConfig[key] as number) = startingValue + difference * (this.time / this.duration);
+      (this.rawCurrentConfig[key] as number) = startingValue + difference * (this.time / this.creationConfig.duration);
     });
   }
 
   public isFinished(): boolean {
-    return this.time === this.duration || this.manuallyFinished;
+    return (!this.creationConfig.repeat && this.time === this.creationConfig.duration) || this.manuallyFinished;
   }
 
   public finish(): void {
@@ -41,11 +43,11 @@ export abstract class OjAnimation<ConfigT extends {} = any, LinkT extends {} = a
 
   protected get currentConfig(): ConfigT {
     const config: ConfigT = { ...this.rawCurrentConfig };
-    if (this.link) {
-      const linkObject = this.link.getLinkObject(this);
-      Object.keys(this.link.map).forEach(k => {
+    if (this.creationConfig.link) {
+      const linkObject = this.creationConfig.link.getLinkObject(this);
+      Object.keys(this.creationConfig.link.map).forEach(k => {
         const linkKey = k as keyof LinkT;
-        const configKey = this.link!.map[linkKey] as keyof ConfigT;
+        const configKey = this.creationConfig.link!.map[linkKey] as keyof ConfigT;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         config[configKey] += linkObject[linkKey] as any;
       });
@@ -54,7 +56,23 @@ export abstract class OjAnimation<ConfigT extends {} = any, LinkT extends {} = a
   }
 
   private set time(value: number) {
-    this._time = Math.min(value, this.duration);
+    const animationRepeat = this.creationConfig.repeat ?? AnimationRepeat.NONE;
+
+    switch (animationRepeat) {
+      case AnimationRepeat.NONE:
+        this._time = Math.min(this.creationConfig.duration, value);
+        return;
+      case AnimationRepeat.REVERSE:
+        if (value >= this.creationConfig.duration) {
+          this.direction = -1;
+          this._time = this.creationConfig.duration * 2 - value;
+        } else if (value < 0) {
+          this.direction = 1;
+          this._time = -value;
+        } else {
+          this._time = value;
+        }
+    }
   }
 
   private get time(): number {

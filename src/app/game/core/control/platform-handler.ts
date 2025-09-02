@@ -1,12 +1,19 @@
-import { PlatformAttributeConstructor, PlatformAttributeSpawningConfig, PlatformSpawningConfig } from '@omegajump-core/configuration';
+import {
+  PlatformAttributeConstructor,
+  PlatformAttributeSpawningConfig,
+  PlatformConstructor,
+  PlatformSpawningConfig
+} from '@omegajump-core/configuration';
 import { ControlObjects, PlatformCreationConfig } from '@omegajump-core/entities/models';
 import { Platform } from '@omegajump-core/entities/platforms';
 import { GameRandomUtils } from './game-random.utils';
 
 export class PlatformHandler {
-  private platformPoolMap: Record<string, Platform[]> = {};
+  private readonly platformPoolMap: Record<string, Platform[]> = {};
 
-  constructor(private readonly controlObjects: Omit<ControlObjects, 'platformHandler'>) {}
+  constructor(private readonly controlObjects: ControlObjects) {
+    // Do not use the controlObjects property in the constructor due to it can be incomplete.
+  }
 
   public spawnPlatform(
     spawningConfigs: readonly PlatformSpawningConfig[],
@@ -40,13 +47,29 @@ export class PlatformHandler {
     }
     const availablePoolItemIndex = pool.findIndex(platform => platform.disabled);
     if (availablePoolItemIndex === -1) {
-      const newPlatform = new spawningPlatformConfig.constructor(this.completeControlObjects);
+      const newPlatform = new spawningPlatformConfig.constructor(this.controlObjects);
       newPlatform.create(modifiedCreationConfig);
       pool.push(newPlatform);
       return newPlatform;
     }
     pool[availablePoolItemIndex].create(modifiedCreationConfig);
     return pool[availablePoolItemIndex];
+  }
+
+  public copyPlatform<T extends Platform>(platform: T): T {
+    const creationConfig = platform.extractCreationConfig();
+    const newPlatform = this.spawnPlatform(
+      [
+        {
+          constructor: platform.constructor as PlatformConstructor,
+          spawningWeight: 1
+        }
+      ],
+      [],
+      creationConfig
+    );
+    newPlatform.disabled = true;
+    return newPlatform as T;
   }
 
   public getCurrentPlatforms(excludeDisabled = true): Platform[] {
@@ -65,12 +88,5 @@ export class PlatformHandler {
       }
     });
     return list;
-  }
-
-  private get completeControlObjects(): ControlObjects {
-    return {
-      ...this.controlObjects,
-      platformHandler: this
-    };
   }
 }

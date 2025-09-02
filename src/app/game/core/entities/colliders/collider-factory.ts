@@ -1,5 +1,6 @@
 import { Position } from '../models';
 import { Platform } from '../platforms';
+import { PowerCell } from '../power-cells';
 import { CircleCollisionBox } from './circle-collision-box';
 import { EntityCollider } from './entity-collider';
 import { RectangleCollisionBox } from './rectangle-collision-box';
@@ -11,5 +12,9 @@ export class ColliderFactory {
       new CircleCollisionBox(-Platform.WIDTH / 2 + Platform.HEIGHT / 2, 0, Platform.HEIGHT / 2, platformPosition),
       new CircleCollisionBox(Platform.WIDTH / 2 - Platform.HEIGHT / 2, 0, Platform.HEIGHT / 2, platformPosition)
     ]);
+  }
+
+  public static createPowerCellCollider(powerCellPosition: Position): EntityCollider {
+    return new EntityCollider([new CircleCollisionBox(0, 0, PowerCell.SIZE / 2, powerCellPosition)]);
   }
 }

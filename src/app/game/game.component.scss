@@ -41,4 +41,27 @@ $padding: 2rem;
     font-size: 3rem;
     font-weight: bold;
   }
+
+  &.player-info {
+    width: 10rem;
+    height: 4rem;
+    bottom: -2rem;
+    border: 0.25rem solid black;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0.5rem black;
+    padding: 0.5rem;
+
+    .power-cell-combo-duration {
+      height: 0.5rem;
+      margin-top: 0.5rem;
+      background-color: white;
+      margin-inline: auto;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  }
 }

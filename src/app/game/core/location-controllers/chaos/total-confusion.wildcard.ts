@@ -41,7 +41,7 @@ export class TotalConfusionWildcard extends ChaosWildcard {
       TotalConfusionWildcard.MIN_CONFUSION_DURATION_S,
       TotalConfusionWildcard.MAX_CONFUSION_DURATION_S
     );
-    player.applyEffect(ConfusionEffect, duration);
+    player.applyEffect(ConfusionEffect, { creationConfig: { duration } });
     return duration;
   }
 }

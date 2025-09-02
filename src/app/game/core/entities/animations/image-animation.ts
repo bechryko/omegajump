@@ -19,7 +19,15 @@ export class ImageAnimation<LinkT extends {}> extends OjAnimation<ImageAnimation
   private readonly frameDuration: number;
 
   constructor(config: ImageAnimationConfig, link: AnimationLink<ImageAnimationConfig, LinkT>) {
-    super(config, {}, Infinity, config.zIndex, link);
+    super(
+      config,
+      {},
+      {
+        duration: Infinity,
+        zIndex: config.zIndex,
+        link
+      }
+    );
 
     this.frameDuration = config.totalDuration / config.frames;
   }

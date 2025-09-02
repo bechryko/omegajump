@@ -17,11 +17,14 @@ export class DrawingController {
   }
 
   public registerDrawable(drawable: Drawable): void {
-    const zIndex = drawable.zIndex;
-    if (!this.drawingQueueMap[zIndex]) {
-      this.drawingQueueMap[zIndex] = [];
-    }
-    this.drawingQueueMap[zIndex].push(drawable);
+    const drawables = drawable.getAllDrawables ? drawable.getAllDrawables() : [drawable];
+    drawables.forEach(d => {
+      const zIndex = d.zIndex;
+      if (!this.drawingQueueMap[zIndex]) {
+        this.drawingQueueMap[zIndex] = [];
+      }
+      this.drawingQueueMap[zIndex].push(d);
+    });
   }
 
   public draw(): void {

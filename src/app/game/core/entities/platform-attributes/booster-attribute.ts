@@ -25,7 +25,7 @@ export class BoosterAttribute extends PlatformAttribute implements OnPlayerJump 
   }
 
   public onPlayerJump(player: Player): void {
-    player.jump(this.hostPlatform.jumpHeight * BoosterAttribute.JUMP_HEIGHT_MODIFIER_PER_STACK ** this.jumpStacks);
+    player.jump(this.hostPlatform.jumpHeight * BoosterAttribute.JUMP_HEIGHT_MODIFIER_PER_STACK ** this.jumpStacks, this.hostPlatform);
     this.jumpStacks++;
   }
 

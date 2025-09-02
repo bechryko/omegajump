@@ -3,33 +3,26 @@ import { OjAnimation } from '@omegajump-core/entities/animations';
 
 export class Animator {
   private readonly animations: OjAnimation[] = [];
-  private readonly entityAnimations: OjAnimation[] = [];
 
   public addAnimation(animation: OjAnimation): void {
     this.animations.push(animation);
   }
 
-  public addEntityAnimation(animation: OjAnimation): void {
-    this.entityAnimations.push(animation);
-  }
-
   public tick(deltaTime: number): void {
     this.animations.forEach(animation => animation.tick(deltaTime));
-    [this.animations, this.entityAnimations].forEach(animationArray => {
-      animationArray.forEach(animation => {
-        if (animation.isFinished()) {
-          this.removeAnimation(animationArray, animation);
-        }
-      });
+    this.animations.forEach(animation => {
+      if (animation.isFinished()) {
+        this.removeAnimation(animation);
+      }
     });
   }
 
   public registerAnimationsForDrawing(drawingController: DrawingController): void {
-    [...this.animations, ...this.entityAnimations].forEach(animation => drawingController.registerDrawable(animation));
+    this.animations.forEach(animation => drawingController.registerDrawable(animation));
   }
 
-  private removeAnimation(array: OjAnimation[], animation: OjAnimation): void {
-    const index = array.indexOf(animation);
-    array.splice(index, 1);
+  private removeAnimation(animation: OjAnimation): void {
+    const index = this.animations.indexOf(animation);
+    this.animations.splice(index, 1);
   }
 }

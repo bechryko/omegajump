@@ -1,35 +1,29 @@
 import { PlatformAttributeConstructor } from '@omegajump-core/configuration';
-import { BaseDrawingUtils, ImageDrawingConfig } from '@omegajump-core/drawing';
+import { BaseDrawingUtils, Drawable } from '@omegajump-core/drawing';
 import { GravityType, MetricsUtils } from '@omegajump-core/physics';
 import { ZIndex } from '../../enums';
 import { ColliderFactory } from '../colliders';
 import { callOnDestroy, callOnPlayerJump, callOnPlayerMove, callOnTick, OnPlayerJump, OnPlayerMove } from '../entity-hooks';
-import { ControlObjects, Entity, PlatformCreationConfig } from '../models';
+import { ControlObjects, Entity, PlatformCreationConfig, PlatformExtractionConfig } from '../models';
 import { GravitationalAttribute, InvisibleAttribute, PlatformAttribute } from '../platform-attributes';
 import { Player } from '../players';
 
 export abstract class Platform extends Entity implements OnPlayerJump, OnPlayerMove {
   public static readonly WIDTH = 4;
   public static readonly HEIGHT = Platform.WIDTH / 5;
-  private static readonly DELETION_Y_THRESHOLD = -Player.SIZE;
+  private static readonly DELETION_Y_THRESHOLD = -2;
   private static readonly DEFAULT_JUMP_HEIGHT = 10;
 
   protected attributes!: PlatformAttribute[];
   private customGravityType!: GravityType;
 
   constructor(
-    protected readonly controlObjects: ControlObjects,
+    controlObjects: ControlObjects,
     private readonly imageSrc: string | (() => string),
     private readonly rawJumpHeight = Platform.DEFAULT_JUMP_HEIGHT
   ) {
     const position = { x: 0, y: 0 };
-    super(
-      controlObjects.animator,
-      position,
-      ColliderFactory.createPlatformCollider(position),
-      ZIndex.PLATFORM,
-      Platform.DELETION_Y_THRESHOLD
-    );
+    super(controlObjects, position, ColliderFactory.createPlatformCollider(position), ZIndex.PLATFORM, Platform.DELETION_Y_THRESHOLD);
   }
 
   public create(config: PlatformCreationConfig): void {
@@ -52,14 +46,18 @@ export abstract class Platform extends Entity implements OnPlayerJump, OnPlayerM
     this.disabled = false;
   }
 
-  public extractCreationConfig(): PlatformCreationConfig {
+  public extractCreationConfig(extractionConfig?: PlatformExtractionConfig): PlatformCreationConfig {
     const config: PlatformCreationConfig = {
       position: { ...this.position },
       velocity: { ...this.velocity },
-      attributes: [...this.attributes],
+      attributes: extractionConfig?.move ? this.attributes : this.attributes.map(attr => attr.constructor as PlatformAttributeConstructor),
       customGravityType: this.customGravityType
     };
-    this.attributes = [];
+
+    if (extractionConfig?.move) {
+      this.attributes = [];
+    }
+
     return config;
   }
 
@@ -87,7 +85,7 @@ export abstract class Platform extends Entity implements OnPlayerJump, OnPlayerM
   }
 
   public onPlayerJump(player: Player): Platform | void {
-    player.jump(this.jumpHeight);
+    player.jump(this.jumpHeight, this);
 
     this.attributes.forEach(attribute => callOnPlayerJump(attribute, player));
   }
@@ -107,13 +105,16 @@ export abstract class Platform extends Entity implements OnPlayerJump, OnPlayerM
     }
 
     const imageSrc = typeof this.imageSrc === 'function' ? this.imageSrc() : this.imageSrc;
-    const drawConfig: ImageDrawingConfig = {
+    BaseDrawingUtils.drawImage(ctx, {
       ...this.position,
       imageSrc,
       width: Platform.WIDTH,
       height: Platform.HEIGHT
-    };
-    BaseDrawingUtils.drawImage(ctx, drawConfig);
+    });
+  }
+
+  public override getAllDrawables(): Drawable[] {
+    return [...super.getAllDrawables(), ...this.attributes.map(attr => attr.getAllDrawables()).flat()];
   }
 
   public get jumpHeight(): number {

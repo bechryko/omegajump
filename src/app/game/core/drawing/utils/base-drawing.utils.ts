@@ -16,10 +16,8 @@ const $ = MetricsUtils.convertOjUnitToPx;
 export class BaseDrawingUtils {
   private static readonly DEFAULT_LINE_WIDTH = MetricsUtils.convertPxToOjUnit(1);
   private static readonly DEFAULT_OPACITY = 1;
-  private static readonly DEFAULT_FONT_FACE = 'Arial';
+  private static readonly DEFAULT_FONT_FACE = 'Rimouski';
   private static readonly DEFAULT_LINE_CAP: CanvasLineCap = 'round';
-
-  private static drawingSettingsInitialized = false;
 
   public static drawRectangle(ctx: CanvasRenderingContext2D, config: RectangleDrawingConfig): void {
     BaseDrawingUtils.setContextColor(ctx, config.color);
@@ -57,8 +55,11 @@ export class BaseDrawingUtils {
   }
 
   public static drawImage(ctx: CanvasRenderingContext2D, config: ImageDrawingConfig): void {
-    BaseDrawingUtils.setContextOpacity(ctx, BaseDrawingUtils.DEFAULT_OPACITY);
+    BaseDrawingUtils.setContextOpacity(ctx, config.opacity ?? BaseDrawingUtils.DEFAULT_OPACITY);
     const image = ImageUtils.getImage(config.imageSrc);
+    const y = config.isFixed
+      ? CameraUtils.convertToDrawableY(config.y + config.height / 2)
+      : CameraUtils.convertToDrawableViewportY(config.y + config.height / 2);
     if ('frameToDrawIdx' in config) {
       const frameHeight = image.height / config.frameNumber;
       ctx.drawImage(
@@ -68,27 +69,20 @@ export class BaseDrawingUtils {
         image.width,
         frameHeight,
         $(config.x - config.width / 2),
-        $(CameraUtils.convertToDrawableViewportY(config.y + config.height / 2)),
+        $(y),
         $(config.width),
         $(config.height)
       );
     } else {
-      ctx.drawImage(
-        image,
-        $(config.x - config.width / 2),
-        $(CameraUtils.convertToDrawableViewportY(config.y + config.height / 2)),
-        $(config.width),
-        $(config.height)
-      );
+      ctx.drawImage(image, $(config.x - config.width / 2), $(y), $(config.width), $(config.height));
     }
   }
 
   public static drawText(ctx: CanvasRenderingContext2D, config: TextDrawingConfig): void {
-    if (!BaseDrawingUtils.drawingSettingsInitialized) {
-      BaseDrawingUtils.initializeDrawingSettings(ctx);
-    }
     BaseDrawingUtils.setContextColor(ctx, config.color);
     BaseDrawingUtils.setContextOpacity(ctx, config.opacity ?? BaseDrawingUtils.DEFAULT_OPACITY);
+    BaseDrawingUtils.setTextAlign(ctx, 'center');
+    BaseDrawingUtils.setTextBaseline(ctx, 'middle');
     ctx.font = `${$(config.fontSize)}px ${config.fontFace ?? BaseDrawingUtils.DEFAULT_FONT_FACE}`;
     const drawingFunction = config.isStroke ? ctx.strokeText : ctx.fillText;
     const y = config.isFixed ? CameraUtils.convertToDrawableY(config.y) : CameraUtils.convertToDrawableViewportY(config.y);
@@ -129,9 +123,15 @@ export class BaseDrawingUtils {
     }
   }
 
-  private static initializeDrawingSettings(ctx: CanvasRenderingContext2D): void {
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    BaseDrawingUtils.drawingSettingsInitialized = true;
+  public static setTextAlign(ctx: CanvasRenderingContext2D, textAlign: CanvasTextAlign): void {
+    if (ctx.textAlign !== textAlign) {
+      ctx.textAlign = textAlign;
+    }
+  }
+
+  public static setTextBaseline(ctx: CanvasRenderingContext2D, textBaseline: CanvasTextBaseline): void {
+    if (ctx.textBaseline !== textBaseline) {
+      ctx.textBaseline = textBaseline;
+    }
   }
 }
